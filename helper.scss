@@ -1,0 +1,103 @@
+/* Based on Creating Pixel Art with CSS by Jacque Schrag
+https://dev.to/jnschrag/creating-pixel-art-with-css-3451 */
+
+@function pixelize($colors, $size) {
+  $result: "";
+  $numRows: length($colors);
+
+  @for $rowIndex from 1 through $numRows {
+    $y: ($rowIndex - 1);
+    $row: nth($colors, $rowIndex);
+    $numCols: length($row);
+
+    @for $cellIndex from 1 through $numCols {
+      $x: ($cellIndex - 1);
+      $color: nth($row, $cellIndex);
+
+      $sep: ",";
+      @if $x == 0 and $y == 0 {
+        $sep: "";
+      }
+
+      $result: $result + "#{$sep} #{$x * $size} #{$y * $size} #{$color}";
+    }
+  }
+
+  $result: unquote($result);
+  @return $result;
+}
+
+$size: 4px; // multiple of 4 work best
+
+$t: transparent;
+$d: #2e021b;
+$brown: #4d1003;
+$red: #ea0c33;
+$f: #feeff2;
+$mediumf: #fdcfd7;
+$darkf: #fbb0be;
+$blush: #fcd1fa;
+$pink: #fb58ed;
+$g: #064d0a;
+$darkg: #022e06;
+$purple: #c559fc;
+$c: #00ffff;
+$blue: #707dfa;
+$w: #fff;
+
+$portrait: (
+  ($t, $t, $t, $t, $d, $d, $d, $d, $d, $d, $d, $d, $red, $d),
+  ($t, $t, $brown, $d, $d, $d, $d, $d, $d, $d, $d, $d, $d, $red),
+  ($t, $d, $red, $brown, $d, $d, $d, $d, $d, $d, $d, $d, $d, $d, $red, $brown),
+  ($t, $d, $d, $d, $f, $f, $f, $f, $f, $f, $f, $f, $darkf, $d, $d, $red, $d),
+  ($red, $brown, $f, $f, $f, $f, $f, $f, $f, $f, $f, $f, $darkf, $d, $d, $d, $red),
+  ( $d, $brown, $f, $f, $f, $f, $f, $f, $f, $f, $f, $f, $f, $darkf, $d, $d, $red ),
+  // eyes
+  ( $d, $brown, $f, $d, $d, $d, $f, $f, $f, $mediumf, $d, $d, $d, $darkf, $d,
+    $d, $red ),
+  ( $t, $d, $f, $g, $g, $g, $mediumf, $f, $f, $darkf, $g, $g, $g, $darkf, $d,
+    $d, $d ),
+  ( $t, $pink, $darkf, $blush, $darkg, $blush, $f, $pink, $purple, $darkf,
+    $blush, $darkg, $blush, $pink, $d, $red, $d ),
+  ( $t, $d, $pink, $w, $w, $w, $purple, $f, $f, $purple, $w, $w, $w, $purple, $d,
+    $red, $d ),
+  ( $t, $red, $f, $purple, $purple, $purple, $f, $f, $f, $mediumf, $purple,
+  $purple, $purple, $darkf, $red, $d, $d ),
+  // nose
+  ( $t, $red, $f, $f, $f, $f, $f, $f, $f, $darkf, $darkf, $darkf, $darkf,
+  $darkf, $d, $d, $d ),
+  ( $t, $brown, $f, $f, $f, $f, $f, $mediumf, $darkf, $mediumf, $darkf, $darkf,
+  $darkf, $darkf, $d, $d, $red ),
+  // mouth
+  ($t, $t, $f, $f, $f, $f, $f, $f, $f, $f, $f, $f, $darkf, $darkf, $red),
+  ( $t, $t, $t, $mediumf, $f, $f, $f, $f, $f, $darkf, $f, $f, $darkf, $darkf,
+  $red ),
+  // chin and neck
+  ($t, $t, $t, $mediumf, $f, $f, $f, $darkf, $darkf, $f, $f, $f,
+  $darkf),
+  ($t, $t, $t, $t, $mediumf, $f, $f, $f, $f, $f, $f, $darkf, $darkf),
+  ($t, $t, $t, $t, $t, $darkf, $f, $f, $f, $darkf, $darkf, $darkf),
+  ($t, $t, $t, $t, $t, $t, $darkf, $darkf, $darkf, $darkf, $darkf, $darkf),
+  // shirt
+  ( $t, $t, $c, $c, $c, $c, $c, $darkf, $darkf, $darkf, $darkf, $c, $blue,
+  $blue, $blue, $blue ),
+  ( $t, $blue, $blue, $blue, $c, $c, $c, $c, $c, $c, $c, $c, $c, $c, $c, $blue,
+  $blue )
+  );
+
+#portrait {
+  position: relative;
+  width: calc(23 * #{$size});
+  height: calc(18 * #{$size});
+  margin: 0;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: $size;
+    height: $size;
+    box-shadow: pixelize($portrait, $size);
+  }
+}
